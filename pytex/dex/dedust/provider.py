@@ -96,10 +96,12 @@ class DedustProvider(Provider):
         offer_amount: Decimal,
         query_id: int,
         ask_asset: Asset = Asset(_type=AssetType.NATIVE),
+        referral_address: str | None = None,
     ) -> dict[str, Cell | str | int]:
         return await self.create_swap_jetton_to_jetton_transfer_message(
             ask_asset=ask_asset,
             offer_asset=offer_asset,
             offer_amount=offer_amount,
             query_id=query_id,
+            referral_address=referral_address,
         )
