@@ -109,16 +109,31 @@ class Provider(BaseProvider):
         }
 
     async def create_swap_ton_to_jetton_transfer_message(
-        self, ask_asset: Asset, offer_amount: Decimal, offer_asset: Asset, query_id: int
+        self,
+        ask_asset: Asset,
+        offer_amount: Decimal,
+        offer_asset: Asset,
+        query_id: int,
+        referral_address: str | None = None,
     ):
         pass
 
     async def create_swap_jetton_to_jetton_transfer_message(
-        self, ask_asset: Asset, offer_asset: Asset, offer_amount: Decimal, query_id: int
+        self,
+        ask_asset: Asset,
+        offer_asset: Asset,
+        offer_amount: Decimal,
+        query_id: int,
+        referral_address: str | None = None,
     ):
         pass
 
     async def create_swap_jetton_to_ton_transfer_message(
-        self, offer_asset: Asset, offer_amount: Decimal, ask_asset: Asset, query_id: int
+        self,
+        offer_asset: Asset,
+        offer_amount: Decimal,
+        ask_asset: Asset,
+        query_id: int,
+        referral_address: str | None = None,
     ):
         pass
