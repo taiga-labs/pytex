@@ -8,6 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.12"
 tonsdk = "^1.0.15"
+tvm-valuetypes = "^0.0.12"
 
 
 [build-system]
