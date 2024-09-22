@@ -24,14 +24,19 @@ class Operator:
             try:
                 return await self._execute(to_run, single_query)
             except BaseException as e:
+                exception = e
                 pass
             if attempt >= 10:
-                raise OperatorError("failed run task | %s: %s", (e.__class__.__name__, e))
+                raise OperatorError(
+                    "failed run task | %s: %s",
+                    (exception.__class__.__name__, exception),
+                )
             attempt += 1
             await asyncio.sleep(3)
 
     @staticmethod
     async def _execute(to_run: dict, single_query):
+        raise Exception("123321")
         timeout = aiohttp.ClientTimeout(total=5)
 
         async with aiohttp.ClientSession(timeout=timeout) as session:
@@ -142,3 +147,13 @@ class Operator:
 
         balance = Decimal(str(int(hex_balance, 0)))
         return balance
+
+
+async def main():
+    operator = Operator(toncenter_api_key="123")
+    await operator.run(to_run={})
+
+
+import asyncio
+
+asyncio.run(main())
