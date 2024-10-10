@@ -26,7 +26,7 @@ class Asset:
         tag: str | None = None,
     ):
         if _type.value is not None and _type == AssetType.NATIVE:
-            self.address = TonSdkAddress(address)
+            self.address = TonSdkAddress(TON_ZERO_ADDRESS)
             self.decimals = 9
             self.tag = "ton" if tag is None else tag
         elif address is not None:
