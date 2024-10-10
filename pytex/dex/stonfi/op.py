@@ -6,7 +6,7 @@ from tonsdk.boc import Cell as TonSdkCell
 
 from pytex.dex.base_operator import Operator
 from pytex.exceptions import OperatorError
-from pytex.units import Asset, AssetType, Reserve
+from pytex.units import Asset, AssetType, Reserve, TON_ZERO_ADDRESS
 
 
 class StonfiOperator(Operator):
@@ -35,9 +35,7 @@ class StonfiOperator(Operator):
         ):
             return jetton_address
         else:
-            return TonSdkAddress(
-                "EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM9c"  # TON zero address
-            )
+            return TonSdkAddress(TON_ZERO_ADDRESS)
 
     async def get_pool_reserves(self, pool_address: str) -> (Decimal, Decimal):
         asset0 = Asset(_type=AssetType.NATIVE)

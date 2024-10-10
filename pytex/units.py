@@ -49,7 +49,7 @@ class Asset:
         self.address = (
             TonSdkAddress(address)
             if address is not None
-            else TonSdkAddress("EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM9c")
+            else TonSdkAddress(TON_ZERO_ADDRESS)
         )
         self.decimals = decimals
         self.tag = tag
