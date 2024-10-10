@@ -39,8 +39,6 @@ class Asset:
                 self._type = AssetType.JETTON
                 if decimals is not None:
                     self.decimals = decimals
-                else:
-                    raise ValueError("Decimals is required for JETTON asset")
                 if tag is not None:
                     self.tag = tag
         else:
