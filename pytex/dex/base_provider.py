@@ -18,26 +18,50 @@ class BaseProvider(ABC):
 
     @abstractmethod
     async def create_swap_ton_to_jetton_transfer_message(
-        self, ask_asset: Asset, offer_amount: Decimal, offer_asset: Asset, query_id: int
+        self,
+        ask_asset: Asset,
+        offer_asset: Asset,
+        offer_amount: Decimal,
+        response_address: str,
+        query_id: int,
+        min_ask_amount: int,
+        gas_amount: Decimal,
+        referral_address: str,
     ):
         raise NotImplementedError
 
     @abstractmethod
     async def create_swap_jetton_to_jetton_transfer_message(
-        self, ask_asset: Asset, offer_asset: Asset, offer_amount: Decimal, query_id: int
+        self,
+        ask_asset: Asset,
+        offer_asset: Asset,
+        offer_amount: Decimal,
+        response_address: str,
+        query_id: int,
+        min_ask_amount: int,
+        gas_amount: Decimal,
+        referral_address: str,
     ):
         raise NotImplementedError
 
     @abstractmethod
     async def create_swap_jetton_to_ton_transfer_message(
-        self, offer_asset: Asset, offer_amount: Decimal, ask_asset: Asset, query_id: int
+        self,
+        ask_asset: Asset,
+        offer_asset: Asset,
+        offer_amount: Decimal,
+        response_address: str,
+        query_id: int,
+        min_ask_amount: int,
+        gas_amount: Decimal,
+        referral_address: str,
     ):
         raise NotImplementedError
 
 
 class Provider(BaseProvider):
-    TRANSFER_NATIVE_GAS = Decimal("3000000")  # Ton
-    TRANSFER_JETTON_GAS = Decimal("37000000")  # Ton
+    TRANSFER_NATIVE_GAS = Decimal("5000000")  # Ton
+    TRANSFER_JETTON_GAS = Decimal("60000000")  # Ton
 
     def __init__(self, mnemonic: list[str], toncenter_api_key: str):
         super().__init__()
@@ -111,10 +135,13 @@ class Provider(BaseProvider):
     async def create_swap_ton_to_jetton_transfer_message(
         self,
         ask_asset: Asset,
-        offer_amount: Decimal,
         offer_asset: Asset,
+        offer_amount: Decimal,
+        response_address: str,
         query_id: int,
-        referral_address: str | None = None,
+        min_ask_amount: int,
+        gas_amount: Decimal,
+        referral_address: str,
     ):
         pass
 
@@ -123,17 +150,23 @@ class Provider(BaseProvider):
         ask_asset: Asset,
         offer_asset: Asset,
         offer_amount: Decimal,
+        response_address: str,
         query_id: int,
-        referral_address: str | None = None,
+        min_ask_amount: int,
+        gas_amount: Decimal,
+        referral_address: str,
     ):
         pass
 
     async def create_swap_jetton_to_ton_transfer_message(
         self,
+        ask_asset: Asset,
         offer_asset: Asset,
         offer_amount: Decimal,
-        ask_asset: Asset,
+        response_address: str,
         query_id: int,
-        referral_address: str | None = None,
+        min_ask_amount: int,
+        gas_amount: Decimal,
+        referral_address: str,
     ):
         pass

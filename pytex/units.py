@@ -4,6 +4,8 @@ from enum import IntEnum
 from tonsdk.utils import Address as TonSdkAddress
 from tonsdk.boc import Cell as TonSdkCell
 
+TON_ZERO_ADDRESS = "EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM9c"
+
 
 class PoolType(IntEnum):
     VOLATILE = 0
@@ -18,11 +20,32 @@ class AssetType(IntEnum):
 class Asset:
     def __init__(
         self,
-        _type: AssetType,
+        _type: AssetType | None = None,
         address: str | None = None,
-        decimals: int = 9,
+        decimals: int | None = None,
         tag: str | None = None,
     ):
+        if _type.value is not None and _type == AssetType.NATIVE:
+            self.address = TonSdkAddress(address)
+            self.decimals = 9
+            self.tag = "ton" if tag is None else tag
+        elif address is not None:
+            self.address = TonSdkAddress(address)
+            if address == TON_ZERO_ADDRESS:
+                self._type = AssetType.NATIVE
+                self.decimals = 9
+                self.tag = "ton" if tag is None else tag
+            else:
+                self._type = AssetType.JETTON
+                if decimals is not None:
+                    self.decimals = decimals
+                else:
+                    raise ValueError("Decimals is required for JETTON asset")
+                if tag is not None:
+                    self.tag = tag
+        else:
+            raise ValueError("Address is required for JETTON asset")
+
         self.address = (
             TonSdkAddress(address)
             if address is not None

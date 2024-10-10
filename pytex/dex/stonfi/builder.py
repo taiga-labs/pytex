@@ -10,7 +10,7 @@ class StonfiBuilder(Builder):
         wallet_address: str,
         min_ask_amount: int,
         ask_jetton_wallet_address: str,  # stonfi router jetton wallet address
-        referral_address: str | None,
+        referral_address: str | None = None,
     ) -> TonSdkCell:
         swap_body: TonSdkCell = TonSdkCell()
         swap_body.bits.write_uint(0x25938561, 32)  # swap op code

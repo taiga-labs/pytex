@@ -69,18 +69,22 @@ class StonfiOperator(Operator):
             raise OperatorError(f"_read_address | raw_data: {raw_data} -> {e}")
 
         token0_address = await self.get_wallet_jetton_master_address(
-            address=token0_governed_address.to_string()
+            address=token0_governed_address.to_string(True, True, True)
         )
         token1_address = await self.get_wallet_jetton_master_address(
-            address=token1_governed_address.to_string()
+            address=token1_governed_address.to_string(True, True, True)
         )
-        if asset0.address.to_string() != token0_address.to_string():
+        if asset0.address.to_string(True, True, True) != token0_address.to_string(
+            True, True, True
+        ):
             asset0 = Asset(
                 _type=AssetType.JETTON,
                 address=token0_address.to_string(True, True, True),
             )
 
-        if asset1.address.to_string() != token1_address.to_string():
+        if asset1.address.to_string(True, True, True) != token1_address.to_string(
+            True, True, True
+        ):
             asset1 = Asset(
                 _type=AssetType.JETTON,
                 address=token1_address.to_string(True, True, True),
