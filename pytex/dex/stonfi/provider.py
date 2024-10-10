@@ -82,7 +82,9 @@ class StonfiProvider(Provider):
         offer_amount: Decimal,
         query_id: int,
         response_address: str = None,
-        offer_asset: Asset = Asset(_type=AssetType.JETTON, address=pTON_ADDRESS),
+        offer_asset: Asset = Asset(
+            _type=AssetType.JETTON, address=pTON_ADDRESS, decimals=9
+        ),
         min_ask_amount: int = 0,
         gas_amount: Decimal = GAS_TON_TO_JETTON.FORWARD_GAS_AMOUNT,
         referral_address: str = None,
@@ -133,7 +135,9 @@ class StonfiProvider(Provider):
         offer_amount: Decimal,
         query_id: int,
         response_address: str = None,
-        ask_asset: Asset = Asset(_type=AssetType.JETTON, address=pTON_ADDRESS),
+        ask_asset: Asset = Asset(
+            _type=AssetType.JETTON, address=pTON_ADDRESS, decimals=9
+        ),
         min_ask_amount: int = 0,
         gas_amount: Decimal = GAS_JETTON_TO_TON.GAS_AMOUNT,
         referral_address: str = None,
