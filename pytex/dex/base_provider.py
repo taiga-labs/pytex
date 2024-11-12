@@ -73,11 +73,13 @@ class Provider(BaseProvider):
         self.wallet_address = self.wallet_multi.address.to_string(True, True, True)
         self.operator = Operator(toncenter_api_key)
 
-    async def transfer(self, msgs: list[dict]) -> str:
+    async def transfer(
+        self, msgs: list[dict], send_mode: int = WalletContractMulti.DEFAULT_SEND_MODE
+    ) -> str:
         cur_seqno = await self.operator.get_seqno(wallet_address=self.wallet_address)
 
         query = self.wallet_multi.create_transfer_messages(
-            messages=msgs, seqno=cur_seqno
+            messages=msgs, seqno=cur_seqno, send_mode=send_mode
         )
         task = self.operator.client.raw_send_message(query["message"].to_boc(False))
         await self.operator.run(to_run=task)
