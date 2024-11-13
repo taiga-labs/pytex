@@ -25,7 +25,7 @@ class Asset:
         decimals: int | None = None,
         tag: str | None = None,
     ):
-        if _type.value is not None and _type.value == AssetType.NATIVE:
+        if _type is not None and _type.value == AssetType.NATIVE:
             self.address = TonSdkAddress(TON_ZERO_ADDRESS)
             self.decimals = 9
             self.tag = "ton" if tag is None else tag
