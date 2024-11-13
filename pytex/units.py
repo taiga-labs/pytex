@@ -32,11 +32,11 @@ class Asset:
         elif address is not None:
             self.address = TonSdkAddress(address)
             if address == TON_ZERO_ADDRESS:
-                self._type = AssetType.NATIVE
+                _type = AssetType.NATIVE
                 self.decimals = 9
                 self.tag = "ton" if tag is None else tag
             else:
-                self._type = AssetType.JETTON
+                _type = AssetType.JETTON
                 if decimals is not None:
                     self.decimals = decimals
                 if tag is not None:
