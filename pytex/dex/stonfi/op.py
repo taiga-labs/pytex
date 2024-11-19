@@ -31,7 +31,7 @@ class StonfiOperator(Operator):
 
         if (
             jetton_address.to_string(True, True, True)
-            != "EQCM3B12QK1e4yZSf8GtBRT0aLMNyEsBc_DhVfRRtOEffLez"  # pTON stonfi jetton master:
+            != "EQCM3B12QK1e4yZSf8GtBRT0aLMNyEsBc_DhVfRRtOEffLez"  # pTON stonfiv1 jetton master:
         ):
             return jetton_address
         else:

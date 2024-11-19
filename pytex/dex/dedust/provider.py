@@ -1,6 +1,7 @@
+from datetime import datetime
 from decimal import Decimal
 
-from tonsdk.boc import Cell
+from tonsdk.boc import Cell as TonSdkCell
 
 from pytex.dex.base_provider import Provider
 from pytex.dex.dedust.builder import NativeDedustBuilder, JettonDedustBuilder, SwapStep
@@ -29,7 +30,10 @@ class DedustProvider(Provider):
         min_ask_amount: int = 0,
         gas_amount: Decimal = GAS.GAS_AMOUNT,
         referral_address: str = None,
-    ) -> dict[str, Cell | str | int]:
+        fulfill_payload: TonSdkCell | None = None,
+        reject_payload: TonSdkCell | None = None,
+        deadline: datetime | None = None,
+    ) -> dict[str, TonSdkCell | str | int]:
         if not response_address:
             response_address = self.wallet_address
 
@@ -37,6 +41,9 @@ class DedustProvider(Provider):
         swap_params = await dd_native_builder.build_swap_params(
             response_address=response_address,
             referral_address=referral_address,
+            fulfill_payload=fulfill_payload,
+            reject_payload=reject_payload,
+            deadline=0 if deadline is None else int(datetime.timestamp(deadline)),
         )
 
         pool_address = await self.operator.get_pool_address(
@@ -67,7 +74,10 @@ class DedustProvider(Provider):
         min_ask_amount: int = 0,
         gas_amount: Decimal = GAS.GAS_AMOUNT,
         referral_address: str = None,
-    ) -> dict[str, Cell | str | int]:
+        fulfill_payload: TonSdkCell | None = None,
+        reject_payload: TonSdkCell | None = None,
+        deadline: datetime | None = None,
+    ) -> dict[str, TonSdkCell | str | int]:
         if not response_address:
             response_address = self.wallet_address
 
@@ -75,6 +85,9 @@ class DedustProvider(Provider):
         swap_params = await dd_jetton_builder.build_swap_params(
             response_address=response_address,
             referral_address=referral_address,
+            fulfill_payload=fulfill_payload,
+            reject_payload=reject_payload,
+            deadline=0 if deadline is None else int(datetime.timestamp(deadline)),
         )
 
         pool_address = await self.operator.get_pool_address(
@@ -89,13 +102,13 @@ class DedustProvider(Provider):
 
         jetton_vault_address = await self.operator.get_vault_address(asset=offer_asset)
         # jetton_vault_address = await self.operator.get_vault_address(asset=ask_asset)
-        transfer_body = await dd_jetton_builder.build_transfer_body(
-            offer_amount=int(offer_amount),
-            to_address=jetton_vault_address,
+        transfer_body = await dd_jetton_builder.build_jetton_transfer_body(
+            destination_address=jetton_vault_address,
+            amount=int(offer_amount),
+            query_id=query_id,
             response_address=response_address,
             forward_amount=int(self.GAS.FORWARD_GAS_AMOUNT),
             forward_payload=swap_body,
-            query_id=query_id,
         )
         jetton_wallet_address = await self.operator.get_jetton_wallet_address(
             jetton_master_address=offer_asset.address.to_string(True, True, True),
@@ -117,7 +130,10 @@ class DedustProvider(Provider):
         min_ask_amount: int = 0,
         gas_amount: Decimal = GAS.GAS_AMOUNT,
         referral_address: str = None,
-    ) -> dict[str, Cell | str | int]:
+        fulfill_payload: TonSdkCell | None = None,
+        reject_payload: TonSdkCell | None = None,
+        deadline: datetime | None = None,
+    ) -> dict[str, TonSdkCell | str | int]:
         return await self.create_swap_jetton_to_jetton_transfer_message(
             ask_asset=ask_asset,
             offer_asset=offer_asset,

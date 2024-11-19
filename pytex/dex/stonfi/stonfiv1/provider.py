@@ -3,12 +3,12 @@ from decimal import Decimal
 from tonsdk.boc import Cell
 
 from pytex.dex.base_provider import Provider
-from pytex.dex.stonfi.builder import StonfiBuilder
-from pytex.dex.stonfi.op import StonfiOperator
+from pytex.dex.stonfi.stonfiv1.builder import StonfiV1Builder
+from pytex.dex.stonfi.stonfiv1.op import StonfiV1Operator
 from pytex.units import Asset, AssetType
 
 
-class StonfiProvider(Provider):
+class StonfiV1Provider(Provider):
     STONFI_ROUTER_V1 = "EQB3ncyBUTjZUA5EnFKR5_EnOMI9V1tTEAAPaiU71gc4TiUt"
     pTON_ADDRESS = "EQCM3B12QK1e4yZSf8GtBRT0aLMNyEsBc_DhVfRRtOEffLez"
 
@@ -25,7 +25,7 @@ class StonfiProvider(Provider):
 
     def __init__(self, mnemonic: list[str], toncenter_api_key: str):
         super().__init__(mnemonic=mnemonic, toncenter_api_key=toncenter_api_key)
-        self.operator = StonfiOperator(toncenter_api_key=toncenter_api_key)
+        self.operator = StonfiV1Operator(toncenter_api_key=toncenter_api_key)
 
     async def _create_swap_transfer_message(
         self,
@@ -40,7 +40,7 @@ class StonfiProvider(Provider):
         referral_address: str,
         offer_owner_address: str = None,
     ) -> dict[str, Cell | str | int]:
-        sf_native_builder = StonfiBuilder()
+        sfv1_native_builder = StonfiV1Builder()
         if offer_owner_address is None:
             offer_owner_address = self.STONFI_ROUTER_V1
 
@@ -54,15 +54,15 @@ class StonfiProvider(Provider):
             wallet_address=offer_owner_address,
         )
 
-        swap_body = await sf_native_builder.build_swap_body(
+        swap_body = await sfv1_native_builder.build_swap_body(
             wallet_address=response_address,
             ask_jetton_wallet_address=ask_jetton_wallet_address,
             min_ask_amount=min_ask_amount,
             referral_address=referral_address,
         )
 
-        transfer_body = sf_native_builder.build_transfer_body(
-            destination=self.STONFI_ROUTER_V1,
+        transfer_body = await sfv1_native_builder.build_jetton_transfer_body(
+            destination_address=self.STONFI_ROUTER_V1,
             amount=offer_amount,
             query_id=query_id,
             response_address=response_address,

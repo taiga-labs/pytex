@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from datetime import datetime
 from decimal import Decimal
 from typing import Any
 
@@ -101,8 +102,10 @@ class Provider(BaseProvider):
             jetton_master_address=jetton_master_address,
             wallet_address=self.wallet_address,
         )
-        jetton_transfer_body = await Builder().build_transfer_body(
-            offer_amount=int(amount), to_address=destination_address, query_id=query_id
+        jetton_transfer_body = await Builder().build_jetton_transfer_body(
+            destination_address=destination_address,
+            amount=int(amount),
+            query_id=query_id,
         )
         return {
             "to_address": jetton_wallet_address,
