@@ -20,11 +20,12 @@ class DedustProvider(Provider):
         ask_asset: Asset,
         offer_amount: Decimal,
         query_id: int,
-        response_address: str = None,
+        pool_address: str | None = None,
+        response_address: str | None = None,
         offer_asset: Asset = Asset(_type=AssetType.NATIVE),
         min_ask_amount: int = 0,
         gas_amount: Decimal = GAS.GAS_AMOUNT,
-        referral_address: str = None,
+        referral_address: str | None = None,
         fulfill_payload: TonSdkCell | None = None,
         reject_payload: TonSdkCell | None = None,
         deadline: datetime | None = None,
@@ -42,9 +43,10 @@ class DedustProvider(Provider):
             deadline=0 if deadline is None else int(datetime.timestamp(deadline)),
         )
 
-        pool_address = await self.operator.get_pool_address(
-            asset0=ask_asset, asset1=offer_asset
-        )
+        if pool_address is None:
+            pool_address = await self.operator.get_pool_address(
+                asset0=ask_asset, asset1=offer_asset
+            )
 
         swap_steps = [SwapStep(pool_address=pool_address, limit=min_ask_amount)]
 
@@ -66,10 +68,11 @@ class DedustProvider(Provider):
         offer_asset: Asset,
         offer_amount: Decimal,
         query_id: int,
-        response_address: str = None,
+        pool_address: str | None = None,
+        response_address: str | None = None,
         min_ask_amount: int = 0,
         gas_amount: Decimal = GAS.GAS_AMOUNT,
-        referral_address: str = None,
+        referral_address: str | None = None,
         fulfill_payload: TonSdkCell | None = None,
         reject_payload: TonSdkCell | None = None,
         deadline: datetime | None = None,
@@ -86,10 +89,10 @@ class DedustProvider(Provider):
             reject_payload=reject_payload,
             deadline=0 if deadline is None else int(datetime.timestamp(deadline)),
         )
-
-        pool_address = await self.operator.get_pool_address(
-            asset0=ask_asset, asset1=offer_asset
-        )
+        if pool_address is None:
+            pool_address = await self.operator.get_pool_address(
+                asset0=ask_asset, asset1=offer_asset
+            )
 
         swap_steps = [SwapStep(pool_address=pool_address, limit=min_ask_amount)]
 
@@ -122,17 +125,19 @@ class DedustProvider(Provider):
         offer_asset: Asset,
         offer_amount: Decimal,
         query_id: int,
-        response_address: str = None,
+        pool_address: str | None = None,
+        response_address: str | None = None,
         ask_asset: Asset = Asset(_type=AssetType.NATIVE),
         min_ask_amount: int = 0,
         gas_amount: Decimal = GAS.GAS_AMOUNT,
-        referral_address: str = None,
+        referral_address: str | None = None,
         fulfill_payload: TonSdkCell | None = None,
         reject_payload: TonSdkCell | None = None,
         deadline: datetime | None = None,
         *_
     ) -> dict[str, TonSdkCell | str | int]:
         return await self.create_swap_jetton_to_jetton_transfer_message(
+            pool_address=pool_address,
             ask_asset=ask_asset,
             offer_asset=offer_asset,
             offer_amount=offer_amount,
