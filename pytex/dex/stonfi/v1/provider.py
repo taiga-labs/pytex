@@ -84,7 +84,7 @@ class StonfiV1Provider(Provider):
         gas_amount: Decimal = GAS_TON_TO_JETTON.FORWARD_GAS_AMOUNT,
         referral_address: str = None,
         custom_payload: TonSdkCell | None = None,
-        *_
+        **_
     ) -> dict[str, TonSdkCell | str | int]:
         if response_address is None:
             response_address = self.wallet_address
@@ -112,7 +112,7 @@ class StonfiV1Provider(Provider):
         gas_amount: Decimal = GAS_JETTON_TO_JETTON.GAS_AMOUNT,
         referral_address: str = None,
         custom_payload: TonSdkCell | None = None,
-        *_
+        **_
     ) -> dict[str, TonSdkCell | str | int]:
         if response_address is None:
             response_address = self.wallet_address
@@ -143,7 +143,7 @@ class StonfiV1Provider(Provider):
         gas_amount: Decimal = GAS_JETTON_TO_TON.GAS_AMOUNT,
         referral_address: str = None,
         custom_payload: TonSdkCell | None = None,
-        *_
+        **_
     ) -> dict[str, TonSdkCell | str | int]:
         if response_address is None:
             response_address = self.wallet_address

@@ -29,7 +29,7 @@ class DedustProvider(Provider):
         fulfill_payload: TonSdkCell | None = None,
         reject_payload: TonSdkCell | None = None,
         deadline: datetime | None = None,
-        *_
+        **_
     ) -> dict[str, TonSdkCell | str | int]:
         if not response_address:
             response_address = self.wallet_address
@@ -76,7 +76,7 @@ class DedustProvider(Provider):
         fulfill_payload: TonSdkCell | None = None,
         reject_payload: TonSdkCell | None = None,
         deadline: datetime | None = None,
-        *_
+        **_
     ) -> dict[str, TonSdkCell | str | int]:
         if not response_address:
             response_address = self.wallet_address
@@ -134,7 +134,7 @@ class DedustProvider(Provider):
         fulfill_payload: TonSdkCell | None = None,
         reject_payload: TonSdkCell | None = None,
         deadline: datetime | None = None,
-        *_
+        **_
     ) -> dict[str, TonSdkCell | str | int]:
         return await self.create_swap_jetton_to_jetton_transfer_message(
             pool_address=pool_address,

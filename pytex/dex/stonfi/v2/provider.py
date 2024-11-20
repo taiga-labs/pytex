@@ -180,7 +180,7 @@ class StonfiV2Provider(Provider):
         fulfill_payload: TonSdkCell | None = None,
         reject_gas: Decimal | None = None,
         reject_payload: TonSdkCell | None = None,
-        *_
+        **_
     ) -> dict[str, TonSdkCell | str | int]:
         if response_address is None:
             response_address = self.wallet_address
@@ -227,7 +227,7 @@ class StonfiV2Provider(Provider):
         fulfill_payload: TonSdkCell | None = None,
         reject_gas: Decimal | None = None,
         reject_payload: TonSdkCell | None = None,
-        *_
+        **_
     ) -> dict[str, TonSdkCell | str | int]:
         if response_address is None:
             response_address = self.wallet_address
@@ -277,7 +277,7 @@ class StonfiV2Provider(Provider):
         fulfill_payload: TonSdkCell | None = None,
         reject_gas: Decimal | None = None,
         reject_payload: TonSdkCell | None = None,
-        *_
+        **_
     ) -> dict[str, TonSdkCell | str | int]:
         if response_address is None:
             response_address = self.wallet_address
