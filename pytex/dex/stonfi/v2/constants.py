@@ -1,0 +1,17 @@
+from decimal import Decimal
+
+pTON_ADDRESS_V2 = "EQBnGWMCf3-FZZq1W4IWcWiGAc3PHuZ0_H-7sad2oY00o83S"
+
+
+class GAS_JETTON_TO_JETTON:
+    GAS_AMOUNT = Decimal("300000000")
+    FORWARD_GAS_AMOUNT = Decimal("240000000")
+
+
+class GAS_JETTON_TO_TON:
+    GAS_AMOUNT = Decimal("300000000")
+    FORWARD_GAS_AMOUNT = Decimal("240000000")
+
+
+class GAS_TON_TO_JETTON:
+    FORWARD_GAS_AMOUNT = Decimal("300000000")

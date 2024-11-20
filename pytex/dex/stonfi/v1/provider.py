@@ -1,28 +1,21 @@
 from decimal import Decimal
 
-from tonsdk.boc import Cell
+from tonsdk.boc import Cell as TonSdkCell
 
 from pytex.dex.base_provider import Provider
-from pytex.dex.stonfi.stonfiv1.builder import StonfiV1Builder
-from pytex.dex.stonfi.stonfiv1.op import StonfiV1Operator
+from pytex.dex.stonfi.v1.builder import StonfiV1Builder
+from pytex.dex.stonfi.v1.constants import (
+    STONFI_ROUTER_V1,
+    pTON_ADDRESS_V1,
+    GAS_TON_TO_JETTON,
+    GAS_JETTON_TO_JETTON,
+    GAS_JETTON_TO_TON,
+)
+from pytex.dex.stonfi.v1.op import StonfiV1Operator
 from pytex.units import Asset, AssetType
 
 
 class StonfiV1Provider(Provider):
-    STONFI_ROUTER_V1 = "EQB3ncyBUTjZUA5EnFKR5_EnOMI9V1tTEAAPaiU71gc4TiUt"
-    pTON_ADDRESS = "EQCM3B12QK1e4yZSf8GtBRT0aLMNyEsBc_DhVfRRtOEffLez"
-
-    class GAS_JETTON_TO_JETTON:
-        GAS_AMOUNT = Decimal("265000000")
-        FORWARD_GAS_AMOUNT = Decimal("205000000")
-
-    class GAS_JETTON_TO_TON:
-        GAS_AMOUNT = Decimal("185000000")
-        FORWARD_GAS_AMOUNT = Decimal("125000000")
-
-    class GAS_TON_TO_JETTON:
-        FORWARD_GAS_AMOUNT = Decimal("215000000")
-
     def __init__(self, mnemonic: list[str], toncenter_api_key: str):
         super().__init__(mnemonic=mnemonic, toncenter_api_key=toncenter_api_key)
         self.operator = StonfiV1Operator(toncenter_api_key=toncenter_api_key)
@@ -39,14 +32,15 @@ class StonfiV1Provider(Provider):
         query_id: int,
         referral_address: str,
         offer_owner_address: str = None,
-    ) -> dict[str, Cell | str | int]:
+        custom_payload: TonSdkCell | None = None,
+    ) -> dict[str, TonSdkCell | str | int]:
         sfv1_native_builder = StonfiV1Builder()
         if offer_owner_address is None:
-            offer_owner_address = self.STONFI_ROUTER_V1
+            offer_owner_address = STONFI_ROUTER_V1
 
         ask_jetton_wallet_address = await self.operator.get_jetton_wallet_address(
             jetton_master_address=ask_asset.address.to_string(True, True, True),
-            wallet_address=self.STONFI_ROUTER_V1,
+            wallet_address=STONFI_ROUTER_V1,
         )
 
         offer_jetton_wallet_address = await self.operator.get_jetton_wallet_address(
@@ -62,10 +56,11 @@ class StonfiV1Provider(Provider):
         )
 
         transfer_body = await sfv1_native_builder.build_jetton_transfer_body(
-            destination_address=self.STONFI_ROUTER_V1,
+            destination_address=STONFI_ROUTER_V1,
             amount=offer_amount,
             query_id=query_id,
             response_address=response_address,
+            custom_payload=custom_payload,
             forward_amount=forward_amount,
             forward_payload=swap_body,
         )
@@ -83,12 +78,14 @@ class StonfiV1Provider(Provider):
         query_id: int,
         response_address: str = None,
         offer_asset: Asset = Asset(
-            _type=AssetType.JETTON, address=pTON_ADDRESS, decimals=9
+            _type=AssetType.JETTON, address=pTON_ADDRESS_V1, decimals=9
         ),
         min_ask_amount: int = 0,
         gas_amount: Decimal = GAS_TON_TO_JETTON.FORWARD_GAS_AMOUNT,
         referral_address: str = None,
-    ) -> dict[str, Cell | str | int]:
+        custom_payload: TonSdkCell | None = None,
+        *_
+    ) -> dict[str, TonSdkCell | str | int]:
         if response_address is None:
             response_address = self.wallet_address
         return await self._create_swap_transfer_message(
@@ -101,6 +98,7 @@ class StonfiV1Provider(Provider):
             min_ask_amount=min_ask_amount,
             query_id=query_id,
             referral_address=referral_address,
+            custom_payload=custom_payload,
         )
 
     async def create_swap_jetton_to_jetton_transfer_message(
@@ -113,7 +111,9 @@ class StonfiV1Provider(Provider):
         min_ask_amount: int = 0,
         gas_amount: Decimal = GAS_JETTON_TO_JETTON.GAS_AMOUNT,
         referral_address: str = None,
-    ) -> dict[str, Cell | str | int]:
+        custom_payload: TonSdkCell | None = None,
+        *_
+    ) -> dict[str, TonSdkCell | str | int]:
         if response_address is None:
             response_address = self.wallet_address
         return await self._create_swap_transfer_message(
@@ -122,11 +122,12 @@ class StonfiV1Provider(Provider):
             offer_amount=int(offer_amount),
             response_address=response_address,
             offer_owner_address=response_address,
-            forward_amount=int(self.GAS_JETTON_TO_JETTON.FORWARD_GAS_AMOUNT),
+            forward_amount=int(GAS_JETTON_TO_JETTON.FORWARD_GAS_AMOUNT),
             gas_amount=int(gas_amount),
             min_ask_amount=min_ask_amount,
             query_id=query_id,
             referral_address=referral_address,
+            custom_payload=custom_payload,
         )
 
     async def create_swap_jetton_to_ton_transfer_message(
@@ -136,12 +137,14 @@ class StonfiV1Provider(Provider):
         query_id: int,
         response_address: str = None,
         ask_asset: Asset = Asset(
-            _type=AssetType.JETTON, address=pTON_ADDRESS, decimals=9
+            _type=AssetType.JETTON, address=pTON_ADDRESS_V1, decimals=9
         ),
         min_ask_amount: int = 0,
         gas_amount: Decimal = GAS_JETTON_TO_TON.GAS_AMOUNT,
         referral_address: str = None,
-    ) -> dict[str, Cell | str | int]:
+        custom_payload: TonSdkCell | None = None,
+        *_
+    ) -> dict[str, TonSdkCell | str | int]:
         if response_address is None:
             response_address = self.wallet_address
         return await self._create_swap_transfer_message(
@@ -150,9 +153,10 @@ class StonfiV1Provider(Provider):
             offer_amount=int(offer_amount),
             response_address=response_address,
             offer_owner_address=response_address,
-            forward_amount=int(self.GAS_JETTON_TO_TON.FORWARD_GAS_AMOUNT),
+            forward_amount=int(GAS_JETTON_TO_TON.FORWARD_GAS_AMOUNT),
             gas_amount=int(gas_amount),
             min_ask_amount=min_ask_amount,
             query_id=query_id,
             referral_address=referral_address,
+            custom_payload=custom_payload,
         )

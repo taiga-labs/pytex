@@ -8,7 +8,7 @@ class StonfiV2Builder(StonfiBuilder):
     @staticmethod
     async def build_cross_swap_body(
         min_out: int,
-        receiver_address: str,  # TODO can be None
+        receiver_address: str,
         fwd_gas: int = 0,
         refund_fwd_gas: int = 0,
         ref_fee: int = 0,  # max 100 (%)

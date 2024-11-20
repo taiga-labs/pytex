@@ -5,6 +5,8 @@ from tonsdk.utils import Address as TonSdkAddress
 from tonsdk.boc import Cell as TonSdkCell
 
 from pytex.dex.base_operator import Operator
+from pytex.dex.stonfi.v1.constants import pTON_ADDRESS_V1
+from pytex.dex.stonfi.v2.constants import pTON_ADDRESS_V2
 from pytex.exceptions import OperatorError
 from pytex.units import Asset, AssetType, Reserve, TON_ZERO_ADDRESS
 
@@ -29,13 +31,11 @@ class StonfiOperator(Operator):
         except Exception as e:
             raise OperatorError(f"_read_address | raw_data: {raw_data} -> {e}")
 
-        if (
-            jetton_address.to_string(True, True, True)
-            != "EQCM3B12QK1e4yZSf8GtBRT0aLMNyEsBc_DhVfRRtOEffLez"  # pTON stonfiv1 jetton master:
-        ):
-            return jetton_address
-        else:
+        if jetton_address.to_string(True, True, True) == pTON_ADDRESS_V1:
             return TonSdkAddress(TON_ZERO_ADDRESS)
+        if jetton_address.to_string(True, True, True) == pTON_ADDRESS_V2:
+            return TonSdkAddress(TON_ZERO_ADDRESS)
+        return jetton_address
 
     async def get_pool_reserves(self, pool_address: str) -> (Decimal, Decimal):
         asset0 = Asset(_type=AssetType.NATIVE)

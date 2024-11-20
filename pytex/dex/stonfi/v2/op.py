@@ -25,7 +25,5 @@ class StonfiV2Operator(StonfiOperator):
         try:
             jetton_address = self._read_address(cell)
         except Exception as e:
-            raise OperatorError(
-                f"_read_address | raw_data: {raw_data} -> {e}"
-            )  # TODO stonfiv2 errors
+            raise OperatorError(f"_read_address | raw_data: {raw_data} -> {e}")
         return jetton_address

@@ -5,17 +5,12 @@ from tonsdk.boc import Cell as TonSdkCell
 
 from pytex.dex.base_provider import Provider
 from pytex.dex.dedust.builder import NativeDedustBuilder, JettonDedustBuilder, SwapStep
+from pytex.dex.dedust.constants import GAS, DEDUST_NATIVE_VAULT
 from pytex.dex.dedust.op import DedustOperator
 from pytex.units import Asset, AssetType
 
 
 class DedustProvider(Provider):
-    DEDUST_NATIVE_VAULT = "EQDa4VOnTYlLvDJ0gZjNYm5PXfSmmtL6Vs6A_CZEtXCNICq_"
-
-    class GAS:
-        GAS_AMOUNT = Decimal("300000000")
-        FORWARD_GAS_AMOUNT = Decimal("250000000")
-
     def __init__(self, mnemonic: list[str], toncenter_api_key: str):
         super().__init__(mnemonic=mnemonic, toncenter_api_key=toncenter_api_key)
         self.operator = DedustOperator(toncenter_api_key=toncenter_api_key)
@@ -33,6 +28,7 @@ class DedustProvider(Provider):
         fulfill_payload: TonSdkCell | None = None,
         reject_payload: TonSdkCell | None = None,
         deadline: datetime | None = None,
+        *_
     ) -> dict[str, TonSdkCell | str | int]:
         if not response_address:
             response_address = self.wallet_address
@@ -59,7 +55,7 @@ class DedustProvider(Provider):
             query_id=query_id,
         )
         return {
-            "to_address": self.DEDUST_NATIVE_VAULT,
+            "to_address": DEDUST_NATIVE_VAULT,
             "amount": int(offer_amount + gas_amount),
             "payload": swap_body,
         }
@@ -77,6 +73,7 @@ class DedustProvider(Provider):
         fulfill_payload: TonSdkCell | None = None,
         reject_payload: TonSdkCell | None = None,
         deadline: datetime | None = None,
+        *_
     ) -> dict[str, TonSdkCell | str | int]:
         if not response_address:
             response_address = self.wallet_address
@@ -107,7 +104,7 @@ class DedustProvider(Provider):
             amount=int(offer_amount),
             query_id=query_id,
             response_address=response_address,
-            forward_amount=int(self.GAS.FORWARD_GAS_AMOUNT),
+            forward_amount=int(GAS.FORWARD_GAS_AMOUNT),
             forward_payload=swap_body,
         )
         jetton_wallet_address = await self.operator.get_jetton_wallet_address(
@@ -133,6 +130,7 @@ class DedustProvider(Provider):
         fulfill_payload: TonSdkCell | None = None,
         reject_payload: TonSdkCell | None = None,
         deadline: datetime | None = None,
+        *_
     ) -> dict[str, TonSdkCell | str | int]:
         return await self.create_swap_jetton_to_jetton_transfer_message(
             ask_asset=ask_asset,
@@ -143,4 +141,7 @@ class DedustProvider(Provider):
             min_ask_amount=min_ask_amount,
             gas_amount=gas_amount,
             referral_address=referral_address,
+            fulfill_payload=fulfill_payload,
+            reject_payload=reject_payload,
+            deadline=deadline,
         )

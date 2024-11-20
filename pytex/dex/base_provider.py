@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from datetime import datetime
 from decimal import Decimal
 from typing import Any
 
@@ -9,7 +8,6 @@ from tonsdk.boc import Cell as TonSdkCell
 
 from .base_builder import Builder
 from .base_operator import Operator
-from pytex.units import Asset
 from pytex.wallet import WalletContractMulti
 
 
@@ -18,45 +16,15 @@ class BaseProvider(ABC):
         pass
 
     @abstractmethod
-    async def create_swap_ton_to_jetton_transfer_message(
-        self,
-        ask_asset: Asset,
-        offer_asset: Asset,
-        offer_amount: Decimal,
-        response_address: str,
-        query_id: int,
-        min_ask_amount: int,
-        gas_amount: Decimal,
-        referral_address: str,
-    ):
+    async def create_swap_ton_to_jetton_transfer_message(self, **kwargs):
         raise NotImplementedError
 
     @abstractmethod
-    async def create_swap_jetton_to_jetton_transfer_message(
-        self,
-        ask_asset: Asset,
-        offer_asset: Asset,
-        offer_amount: Decimal,
-        response_address: str,
-        query_id: int,
-        min_ask_amount: int,
-        gas_amount: Decimal,
-        referral_address: str,
-    ):
+    async def create_swap_jetton_to_jetton_transfer_message(self, **kwargs):
         raise NotImplementedError
 
     @abstractmethod
-    async def create_swap_jetton_to_ton_transfer_message(
-        self,
-        ask_asset: Asset,
-        offer_asset: Asset,
-        offer_amount: Decimal,
-        response_address: str,
-        query_id: int,
-        min_ask_amount: int,
-        gas_amount: Decimal,
-        referral_address: str,
-    ):
+    async def create_swap_jetton_to_ton_transfer_message(self, **kwargs):
         raise NotImplementedError
 
 
@@ -137,41 +105,11 @@ class Provider(BaseProvider):
             "payload": payload,
         }
 
-    async def create_swap_ton_to_jetton_transfer_message(
-        self,
-        ask_asset: Asset,
-        offer_asset: Asset,
-        offer_amount: Decimal,
-        response_address: str,
-        query_id: int,
-        min_ask_amount: int,
-        gas_amount: Decimal,
-        referral_address: str,
-    ):
+    async def create_swap_ton_to_jetton_transfer_message(self, **kwargs):
         pass
 
-    async def create_swap_jetton_to_jetton_transfer_message(
-        self,
-        ask_asset: Asset,
-        offer_asset: Asset,
-        offer_amount: Decimal,
-        response_address: str,
-        query_id: int,
-        min_ask_amount: int,
-        gas_amount: Decimal,
-        referral_address: str,
-    ):
+    async def create_swap_jetton_to_jetton_transfer_message(self, **kwargs):
         pass
 
-    async def create_swap_jetton_to_ton_transfer_message(
-        self,
-        ask_asset: Asset,
-        offer_asset: Asset,
-        offer_amount: Decimal,
-        response_address: str,
-        query_id: int,
-        min_ask_amount: int,
-        gas_amount: Decimal,
-        referral_address: str,
-    ):
+    async def create_swap_jetton_to_ton_transfer_messages(self, **kwargs):
         pass

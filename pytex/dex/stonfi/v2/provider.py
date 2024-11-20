@@ -1,30 +1,21 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from decimal import Decimal
 
 from tonsdk.boc import Cell as TonSdkCell
 
 from pytex.dex.base_provider import Provider
-from pytex.dex.stonfi.stonfiv2.builder import StonfiV2Builder
-from pytex.dex.stonfi.stonfiv2.op import StonfiV2Operator
+from pytex.dex.stonfi.v2.builder import StonfiV2Builder
+from pytex.dex.stonfi.v2.constants import (
+    pTON_ADDRESS_V2,
+    GAS_TON_TO_JETTON,
+    GAS_JETTON_TO_JETTON,
+    GAS_JETTON_TO_TON,
+)
+from pytex.dex.stonfi.v2.op import StonfiV2Operator
 from pytex.units import Asset, AssetType
 
 
 class StonfiV2Provider(Provider):
-    pTON_ADDRESS_V2 = (
-        "EQBnGWMCf3-FZZq1W4IWcWiGAc3PHuZ0_H-7sad2oY00o83S"  # TODO find all
-    )
-
-    class GAS_JETTON_TO_JETTON:
-        GAS_AMOUNT = Decimal("265000000")
-        FORWARD_GAS_AMOUNT = Decimal("205000000")
-
-    class GAS_JETTON_TO_TON:
-        GAS_AMOUNT = Decimal("265000000")
-        FORWARD_GAS_AMOUNT = Decimal("205000000")
-
-    class GAS_TON_TO_JETTON:
-        FORWARD_GAS_AMOUNT = Decimal("310000000")
-
     def __init__(self, mnemonic: list[str], toncenter_api_key: str):
         super().__init__(mnemonic=mnemonic, toncenter_api_key=toncenter_api_key)
         self.operator = StonfiV2Operator(toncenter_api_key=toncenter_api_key)
@@ -174,7 +165,7 @@ class StonfiV2Provider(Provider):
         ask_asset: Asset,
         offer_amount: Decimal,
         query_id: int,
-        deadline: datetime,
+        deadline: datetime | None = None,
         response_address: str = None,
         offer_asset: Asset = Asset(
             _type=AssetType.JETTON, address=pTON_ADDRESS_V2, decimals=9
@@ -189,6 +180,7 @@ class StonfiV2Provider(Provider):
         fulfill_payload: TonSdkCell | None = None,
         reject_gas: Decimal | None = None,
         reject_payload: TonSdkCell | None = None,
+        *_
     ) -> dict[str, TonSdkCell | str | int]:
         if response_address is None:
             response_address = self.wallet_address
@@ -209,7 +201,11 @@ class StonfiV2Provider(Provider):
             fulfill_payload=fulfill_payload,
             reject_gas=0 if reject_gas is None else int(reject_gas),
             reject_payload=reject_payload,
-            deadline=int(datetime.timestamp(deadline)),
+            deadline=(
+                int((datetime.now() + timedelta(minutes=30)).timestamp())
+                if deadline is None
+                else int(datetime.timestamp(deadline))
+            ),
         )
 
     async def create_swap_jetton_to_jetton_transfer_message(
@@ -219,7 +215,7 @@ class StonfiV2Provider(Provider):
         offer_asset: Asset,
         offer_amount: Decimal,
         query_id: int,
-        deadline: datetime,
+        deadline: datetime | None = None,
         response_address: str = None,
         min_ask_amount: int = 0,
         gas_amount: Decimal = GAS_JETTON_TO_JETTON.GAS_AMOUNT,
@@ -231,6 +227,7 @@ class StonfiV2Provider(Provider):
         fulfill_payload: TonSdkCell | None = None,
         reject_gas: Decimal | None = None,
         reject_payload: TonSdkCell | None = None,
+        *_
     ) -> dict[str, TonSdkCell | str | int]:
         if response_address is None:
             response_address = self.wallet_address
@@ -241,7 +238,7 @@ class StonfiV2Provider(Provider):
             offer_amount=int(offer_amount),
             response_address=response_address,
             gas_amount=int(gas_amount),
-            forward_amount=int(self.GAS_JETTON_TO_JETTON.FORWARD_GAS_AMOUNT),
+            forward_amount=int(GAS_JETTON_TO_JETTON.FORWARD_GAS_AMOUNT),
             min_ask_amount=min_ask_amount,
             query_id=query_id,
             refund_address=refund_address,
@@ -252,7 +249,11 @@ class StonfiV2Provider(Provider):
             fulfill_payload=fulfill_payload,
             reject_gas=0 if reject_gas is None else int(reject_gas),
             reject_payload=reject_payload,
-            deadline=int(datetime.timestamp(deadline)),
+            deadline=(
+                int((datetime.now() + timedelta(minutes=30)).timestamp())
+                if deadline is None
+                else int(datetime.timestamp(deadline))
+            ),
         )
 
     async def create_swap_jetton_to_ton_transfer_message(
@@ -261,7 +262,7 @@ class StonfiV2Provider(Provider):
         offer_asset: Asset,
         offer_amount: Decimal,
         query_id: int,
-        deadline: datetime,
+        deadline: datetime | None = None,
         response_address: str | None = None,
         ask_asset: Asset = Asset(
             _type=AssetType.JETTON, address=pTON_ADDRESS_V2, decimals=9
@@ -276,6 +277,7 @@ class StonfiV2Provider(Provider):
         fulfill_payload: TonSdkCell | None = None,
         reject_gas: Decimal | None = None,
         reject_payload: TonSdkCell | None = None,
+        *_
     ) -> dict[str, TonSdkCell | str | int]:
         if response_address is None:
             response_address = self.wallet_address
@@ -286,7 +288,7 @@ class StonfiV2Provider(Provider):
             offer_amount=int(offer_amount),
             response_address=response_address,
             gas_amount=int(gas_amount),
-            forward_amount=int(self.GAS_JETTON_TO_TON.FORWARD_GAS_AMOUNT),
+            forward_amount=int(GAS_JETTON_TO_TON.FORWARD_GAS_AMOUNT),
             min_ask_amount=min_ask_amount,
             query_id=query_id,
             refund_address=refund_address,
@@ -297,5 +299,9 @@ class StonfiV2Provider(Provider):
             fulfill_payload=fulfill_payload,
             reject_gas=0 if reject_gas is None else int(reject_gas),
             reject_payload=reject_payload,
-            deadline=int(datetime.timestamp(deadline)),
+            deadline=(
+                int((datetime.now() + timedelta(minutes=30)).timestamp())
+                if deadline is None
+                else int(datetime.timestamp(deadline))
+            ),
         )
