@@ -111,5 +111,5 @@ class Provider(BaseProvider):
     async def create_swap_jetton_to_jetton_transfer_message(self, **kwargs):
         pass
 
-    async def create_swap_jetton_to_ton_transfer_messages(self, **kwargs):
+    async def create_swap_jetton_to_ton_transfer_message(self, **kwargs):
         pass
