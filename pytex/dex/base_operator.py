@@ -72,7 +72,7 @@ class Operator:
 
     async def get_jetton_wallet_address(
         self, jetton_master_address: str, wallet_address: str
-    ) -> str | None:
+    ) -> str:
         cell = TonSdkCell()
         cell.bits.write_address(TonSdkAddress(wallet_address))
         request_stack = [["tvm.Slice", bytes_to_b64str(cell.to_boc(False))]]

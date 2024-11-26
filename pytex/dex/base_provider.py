@@ -8,7 +8,6 @@ from tonsdk.boc import Cell as TonSdkCell
 
 from .base_builder import Builder
 from .base_operator import Operator
-from pytex.units import Asset
 from pytex.wallet import WalletContractMulti
 
 
@@ -17,45 +16,15 @@ class BaseProvider(ABC):
         pass
 
     @abstractmethod
-    async def create_swap_ton_to_jetton_transfer_message(
-        self,
-        ask_asset: Asset,
-        offer_asset: Asset,
-        offer_amount: Decimal,
-        response_address: str,
-        query_id: int,
-        min_ask_amount: int,
-        gas_amount: Decimal,
-        referral_address: str,
-    ):
+    async def create_swap_ton_to_jetton_transfer_message(self, **kwargs):
         raise NotImplementedError
 
     @abstractmethod
-    async def create_swap_jetton_to_jetton_transfer_message(
-        self,
-        ask_asset: Asset,
-        offer_asset: Asset,
-        offer_amount: Decimal,
-        response_address: str,
-        query_id: int,
-        min_ask_amount: int,
-        gas_amount: Decimal,
-        referral_address: str,
-    ):
+    async def create_swap_jetton_to_jetton_transfer_message(self, **kwargs):
         raise NotImplementedError
 
     @abstractmethod
-    async def create_swap_jetton_to_ton_transfer_message(
-        self,
-        ask_asset: Asset,
-        offer_asset: Asset,
-        offer_amount: Decimal,
-        response_address: str,
-        query_id: int,
-        min_ask_amount: int,
-        gas_amount: Decimal,
-        referral_address: str,
-    ):
+    async def create_swap_jetton_to_ton_transfer_message(self, **kwargs):
         raise NotImplementedError
 
 
@@ -101,8 +70,10 @@ class Provider(BaseProvider):
             jetton_master_address=jetton_master_address,
             wallet_address=self.wallet_address,
         )
-        jetton_transfer_body = await Builder().build_transfer_body(
-            offer_amount=int(amount), to_address=destination_address, query_id=query_id
+        jetton_transfer_body = await Builder().build_jetton_transfer_body(
+            destination_address=destination_address,
+            amount=int(amount),
+            query_id=query_id,
         )
         return {
             "to_address": jetton_wallet_address,
@@ -134,41 +105,11 @@ class Provider(BaseProvider):
             "payload": payload,
         }
 
-    async def create_swap_ton_to_jetton_transfer_message(
-        self,
-        ask_asset: Asset,
-        offer_asset: Asset,
-        offer_amount: Decimal,
-        response_address: str,
-        query_id: int,
-        min_ask_amount: int,
-        gas_amount: Decimal,
-        referral_address: str,
-    ):
+    async def create_swap_ton_to_jetton_transfer_message(self, **kwargs):
         pass
 
-    async def create_swap_jetton_to_jetton_transfer_message(
-        self,
-        ask_asset: Asset,
-        offer_asset: Asset,
-        offer_amount: Decimal,
-        response_address: str,
-        query_id: int,
-        min_ask_amount: int,
-        gas_amount: Decimal,
-        referral_address: str,
-    ):
+    async def create_swap_jetton_to_jetton_transfer_message(self, **kwargs):
         pass
 
-    async def create_swap_jetton_to_ton_transfer_message(
-        self,
-        ask_asset: Asset,
-        offer_asset: Asset,
-        offer_amount: Decimal,
-        response_address: str,
-        query_id: int,
-        min_ask_amount: int,
-        gas_amount: Decimal,
-        referral_address: str,
-    ):
+    async def create_swap_jetton_to_ton_transfer_message(self, **kwargs):
         pass

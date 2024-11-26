@@ -14,12 +14,13 @@ class DedustBuilder(Builder):
     @staticmethod
     async def build_swap_params(
         response_address: str,
-        fulfill_payload: TonSdkCell = None,
-        reject_payload: TonSdkCell = None,
+        fulfill_payload: TonSdkCell | None = None,
+        reject_payload: TonSdkCell | None = None,
         referral_address: str | None = None,
+        deadline: int = 0,
     ) -> TonSdkCell:
         dedust_swap_params = TonSdkCell()
-        dedust_swap_params.bits.write_uint(0, 32)  # Deadline
+        dedust_swap_params.bits.write_uint(deadline, 32)  # Deadline
         dedust_swap_params.bits.write_address(
             TonSdkAddress(response_address)
         )  # Recipient address
