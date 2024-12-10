@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pytex"
-version = "0.3.0"
+version = "0.3.1"
 description = "python ton cex/dex utils"
 authors = ["hifided <hifided@gmail.com>"]
 readme = "README.md"

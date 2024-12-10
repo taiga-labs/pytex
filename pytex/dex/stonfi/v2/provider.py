@@ -532,7 +532,7 @@ class StonfiV2Provider(Provider):
 
     async def create_swap_jetton_to_jetton_transfer_message(
         self,
-        pools: list[str],
+        pool_address: str,
         ask_asset: Asset,
         offer_asset: Asset,
         offer_amount: Decimal,
@@ -555,7 +555,7 @@ class StonfiV2Provider(Provider):
             response_address = self.wallet_address
 
         return await self._create_jetton_swap_transfer_message(
-            pool_address=pools[0],
+            pool_address=pool_address,
             ask_asset=ask_asset,
             offer_asset=offer_asset,
             offer_amount=int(offer_amount),
@@ -640,7 +640,6 @@ class StonfiV2Provider(Provider):
         deadline: datetime | None = None,
         response_address: str = None,
         min_ask_amount: int = 0,
-        forward_amount: Decimal | None = None,
         gas_amount: Decimal | None = None,
         refund_address: str | None = None,
         excesses_address: str | None = None,
