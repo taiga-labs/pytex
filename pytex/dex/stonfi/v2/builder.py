@@ -48,7 +48,10 @@ class SwapStep:
         self.reject_gas = reject_gas
         self.reject_payload = reject_payload
 
-        if self.offer_jetton_address == TON_ZERO_ADDRESS or pTON_ADDRESS_V2:
+        if (
+            self.offer_jetton_address == TON_ZERO_ADDRESS
+            or self.offer_jetton_address == pTON_ADDRESS_V2
+        ):
             if self.router_offer_jetton_wallet_address is None:
                 raise ValueError(
                     "Router offer jetton wallet must be specified if offer token is TON"
@@ -262,7 +265,10 @@ class StonfiV2Builder(StonfiBuilder):
                     deadline=deadline,
                 )
             else:
-                if swap_step.ask_jetton_address == TON_ZERO_ADDRESS or pTON_ADDRESS_V2:
+                if (
+                    swap_step.ask_jetton_address == TON_ZERO_ADDRESS
+                    or swap_step.ask_jetton_address == pTON_ADDRESS_V2
+                ):
                     receiver_address = (
                         swap_step.next.router_offer_jetton_wallet_address
                         if swap_step.next is not None
@@ -277,7 +283,7 @@ class StonfiV2Builder(StonfiBuilder):
                     )
                     if (
                         swap_step.offer_jetton_address == TON_ZERO_ADDRESS
-                        or pTON_ADDRESS_V2
+                        or swap_step.offer_jetton_address == pTON_ADDRESS_V2
                     ):
                         fg = GAS_TON_TO_JETTON.FORWARD_GAS_AMOUNT
                     else:

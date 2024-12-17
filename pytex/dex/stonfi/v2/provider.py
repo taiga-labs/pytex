@@ -178,9 +178,9 @@ class StonfiV2Provider(Provider):
         reject_gas: int = 0,
         reject_payload: TonSdkCell | None = None,
     ) -> dict[str, TonSdkCell | str | int]:
-        sfv2_native_builder = StonfiV2Builder()
+        sfv2_builder = StonfiV2Builder()
 
-        swap_body, full_forward_gas = await sfv2_native_builder.pack_swap_steps(
+        swap_body, full_forward_gas = await sfv2_builder.pack_swap_steps(
             swap_chain=swap_chain,
             response_address=response_address,
             min_ask_amount=min_ask_amount,
@@ -202,7 +202,7 @@ class StonfiV2Provider(Provider):
             )
         )
 
-        transfer_body = await sfv2_native_builder.build_pton_transfer_body(
+        transfer_body = await sfv2_builder.build_pton_transfer_body(
             ton_amount=offer_amount,
             query_id=query_id,
             refund_address=response_address,
@@ -336,9 +336,9 @@ class StonfiV2Provider(Provider):
         reject_gas: int = 0,
         reject_payload: TonSdkCell | None = None,
     ) -> dict[str, TonSdkCell | str | int]:
-        sfv2_native_builder = StonfiV2Builder()
+        sfv2_builder = StonfiV2Builder()
 
-        swap_body, full_forward_gas = await sfv2_native_builder.pack_swap_steps(
+        swap_body, full_forward_gas = await sfv2_builder.pack_swap_steps(
             swap_chain=swap_chain,
             response_address=response_address,
             min_ask_amount=min_ask_amount,
@@ -353,7 +353,7 @@ class StonfiV2Provider(Provider):
             reject_payload=reject_payload,
         )
 
-        transfer_body = await sfv2_native_builder.build_jetton_transfer_body(
+        transfer_body = await sfv2_builder.build_jetton_transfer_body(
             destination_address=swap_chain.tail.router_address,
             amount=offer_amount,
             query_id=query_id,
