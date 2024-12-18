@@ -215,6 +215,7 @@ class DedustProvider(Provider):
     async def create_jetton_multi_swap_transfer_message(
         self,
         pools: list[str],
+        offer_asset: Asset,
         offer_amount: Decimal,
         query_id: int,
         response_address: str | None = None,
@@ -249,8 +250,12 @@ class DedustProvider(Provider):
             forward_payload=swap_params,
             query_id=query_id,
         )
+        jetton_wallet_address = await self.operator.get_jetton_wallet_address(
+            jetton_master_address=offer_asset.address.to_string(True, True, True),
+            wallet_address=response_address,
+        )
         return {
-            "to_address": DEDUST_NATIVE_VAULT,
+            "to_address": jetton_wallet_address,
             "amount": int(offer_amount + gas_amount),
             "payload": swap_body,
         }
