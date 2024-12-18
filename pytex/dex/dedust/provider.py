@@ -230,8 +230,8 @@ class DedustProvider(Provider):
         if not response_address:
             response_address = self.wallet_address
 
-        dd_native_builder = NativeDedustBuilder()
-        swap_params = await dd_native_builder.build_swap_params(
+        dd_jetton_builder = JettonDedustBuilder()
+        swap_params = await dd_jetton_builder.build_swap_params(
             response_address=response_address,
             referral_address=referral_address,
             fulfill_payload=fulfill_payload,
@@ -244,18 +244,26 @@ class DedustProvider(Provider):
             for pool_address in pools
         ]
 
-        swap_body = await dd_native_builder.build_swap_body(
-            offer_amount=int(offer_amount),
-            swap_steps=swap_steps,
-            forward_payload=swap_params,
-            query_id=query_id,
+        swap_body = await dd_jetton_builder.build_swap_body(
+            swap_steps=swap_steps, forward_payload=swap_params
         )
+
+        jetton_vault_address = await self.operator.get_vault_address(asset=offer_asset)
+        transfer_body = await dd_jetton_builder.build_jetton_transfer_body(
+            destination_address=jetton_vault_address,
+            amount=int(offer_amount),
+            query_id=query_id,
+            response_address=response_address,
+            forward_amount=int(GAS.FORWARD_GAS_AMOUNT),
+            forward_payload=swap_body,
+        )
+
         jetton_wallet_address = await self.operator.get_jetton_wallet_address(
             jetton_master_address=offer_asset.address.to_string(True, True, True),
             wallet_address=response_address,
         )
         return {
             "to_address": jetton_wallet_address,
-            "amount": int(offer_amount + gas_amount),
-            "payload": swap_body,
+            "amount": int(gas_amount),
+            "payload": transfer_body,
         }
