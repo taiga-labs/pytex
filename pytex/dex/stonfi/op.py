@@ -20,7 +20,7 @@ class StonfiOperator(Operator):
             method="get_wallet_data", address=address, stack_data=[]
         )
 
-        raw_data = await self.run(to_run=raw_get_pool_data)
+        raw_data = await self.run_ex(to_run=raw_get_pool_data)
         if raw_data is None:
             raise OperatorError(f"run get_wallet_data")
 

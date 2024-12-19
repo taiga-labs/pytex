@@ -19,6 +19,14 @@ class Operator:
         )
 
     async def run(self, to_run: dict, *, single_query=True):
+        try:
+            return await self._execute(to_run, single_query)
+        except BaseException as exception:
+            raise OperatorError(
+                "failed run task | %s: %s" % (exception.__class__.__name__, exception),
+            )
+
+    async def run_ex(self, to_run: dict, *, single_query=True):
         attempt = 1
         while True:
             try:
@@ -81,7 +89,7 @@ class Operator:
             address=jetton_master_address,
             stack_data=request_stack,
         )
-        raw_data = await self.run(to_run=raw_get_wallet_address)
+        raw_data = await self.run_ex(to_run=raw_get_wallet_address)
         try:
             b64_bytes_str = raw_data[0].get("stack")[0][1].get("bytes")
             jetton_wallet_address: TonSdkAddress = self._read_address(
@@ -96,7 +104,7 @@ class Operator:
         account_state_task = self.client.raw_get_account_state(
             prepared_address=prepare_address(wallet_address)
         )
-        result = await self.run(to_run=account_state_task)
+        result = await self.run_ex(to_run=account_state_task)
         if "state" in result[0]:
             return str(result[0].get("state"))
         return None
@@ -105,7 +113,7 @@ class Operator:
         cur_adr_seq_no_task = self.client.raw_run_method(
             method="seqno", address=wallet_address, stack_data=[]
         )
-        cur_adr_seq_result = await self.run(to_run=cur_adr_seq_no_task)
+        cur_adr_seq_result = await self.run_ex(to_run=cur_adr_seq_no_task)
         try:
             cur_seq_no = int(cur_adr_seq_result[0].get("stack")[0][1], 16)
         except BaseException:
@@ -118,7 +126,7 @@ class Operator:
             prepared_address=wallet_address
         )
 
-        raw_state = await self.run(to_run=raw_get_account_state_task)
+        raw_state = await self.run_ex(to_run=raw_get_account_state_task)
         try:
             raw_balance = raw_state[0].get("balance")
         except BaseException:
@@ -138,7 +146,7 @@ class Operator:
             method="get_wallet_data", address=jetton_wallet_address, stack_data=[]
         )
 
-        raw_data = await self.run(to_run=raw_get_wallet_data)
+        raw_data = await self.run_ex(to_run=raw_get_wallet_data)
         try:
             hex_balance = raw_data[0].get("stack")[0][1]
         except BaseException:

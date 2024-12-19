@@ -57,7 +57,7 @@ class Provider(BaseProvider):
     async def activate(self):
         query = self.wallet_multi.create_init_external_message()
         task = self.operator.client.raw_send_message(query["message"].to_boc(False))
-        await self.operator.run(to_run=task)
+        await self.operator.run_ex(to_run=task)
 
     async def create_jetton_transfer_message(
         self,

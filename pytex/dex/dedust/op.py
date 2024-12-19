@@ -23,7 +23,7 @@ class DedustOperator(Operator):
             address=self.DEDUST_MAINNET_FACTORY_ADDR,
             stack_data=request_stack,
         )
-        raw_data = await self.run(to_run=raw_get_vault_address)
+        raw_data = await self.run_ex(to_run=raw_get_vault_address)
         if raw_data is None:
             raise OperatorError(f"run get_vault_address")
 
@@ -50,7 +50,7 @@ class DedustOperator(Operator):
             address=self.DEDUST_MAINNET_FACTORY_ADDR,
             stack_data=request_stack,
         )
-        raw_data = await self.run(to_run=raw_get_pool_address)
+        raw_data = await self.run_ex(to_run=raw_get_pool_address)
         if raw_data is None:
             raise OperatorError(f"run get_pool_address")
 
@@ -68,7 +68,7 @@ class DedustOperator(Operator):
         raw_get_assets = self.client.raw_run_method(
             method="get_assets", address=pool_address, stack_data=[]
         )
-        raw_data = await self.run(to_run=raw_get_assets)
+        raw_data = await self.run_ex(to_run=raw_get_assets)
         if raw_data is None:
             raise OperatorError(f"run get_assets")
 
@@ -94,7 +94,7 @@ class DedustOperator(Operator):
         raw_get_reserves = self.client.raw_run_method(
             method="get_reserves", address=pool_address, stack_data=[]
         )
-        raw_data = await self.run(to_run=raw_get_reserves)
+        raw_data = await self.run_ex(to_run=raw_get_reserves)
         if raw_data is None:
             raise OperatorError(f"run get_reserves")
         try:
