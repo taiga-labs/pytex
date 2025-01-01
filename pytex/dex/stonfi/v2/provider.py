@@ -305,7 +305,7 @@ class StonfiV2Provider(Provider):
             min_ask_amount=min_ask_amount,
             query_id=query_id,
             deadline=deadline,
-            gas_amount=gas_amount,
+            gas_amount=offer_amount + gas_amount,
             refund_address=refund_address,
             excesses_address=excesses_address,
             referral_gas=referral_gas,
